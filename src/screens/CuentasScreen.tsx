@@ -1,7 +1,9 @@
 import { useState, useCallback } from 'react';
 import { Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../navigation/types';
 import { obtenerCuentas, crearCuenta, actualizarCuenta, eliminarCuenta } from '../repositories/CuentaRepository';
 import CuentaForm from '../components/CuentaForm';
 
@@ -15,6 +17,7 @@ interface Cuenta {
 }
 
 export default function CuentasScreen() {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [cuentas, setCuentas] = useState<Cuenta[]>([]);
   const [formularioVisible, setFormularioVisible] = useState(false);
   const [cuentaEditando, setCuentaEditando] = useState<Cuenta | null>(null);
@@ -69,6 +72,12 @@ export default function CuentasScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <TouchableOpacity
+        style={styles.botonTransaccion}
+        onPress={() => navigation.navigate('NuevaTransaccion')}
+      >
+        <Text style={styles.botonTransaccionTexto}>+ Nueva transacción</Text>
+      </TouchableOpacity>
       <FlatList
         data={cuentas}
         keyExtractor={(item) => item.id}
@@ -94,6 +103,15 @@ export default function CuentasScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f5f5f5' },
+  botonTransaccion: {
+    backgroundColor: '#2563eb',
+    marginHorizontal: 16,
+    marginTop: 12,
+    padding: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  botonTransaccionTexto: { color: '#fff', fontWeight: '600' },
   card: {
     backgroundColor: '#fff',
     marginHorizontal: 16,
